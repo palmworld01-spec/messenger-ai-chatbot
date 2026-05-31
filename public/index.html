@@ -1,0 +1,1392 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>BotBazar — AI Chatbot SaaS</title>
+
+  <link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;600;700;800&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0a0a0f;
+      --surface: #13131a;
+      --card: #1a1a24;
+      --border: #2a2a3a;
+      --accent: #6c63ff;
+      --accent2: #ff6584;
+      --green: #00e5a0;
+      --text: #e8e8f0;
+      --muted: #8a8aa8;
+      --radius: 16px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'DM Sans', sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    .page {
+      display: none;
+      min-height: 100vh;
+    }
+
+    .page.active {
+      display: flex;
+      flex-direction: column;
+    }
+
+    #landing {
+      background: radial-gradient(ellipse at 20% 20%, #1a1040 0%, #0a0a0f 60%);
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      padding: 40px 20px;
+    }
+
+    .logo {
+      font-family: 'Syne', sans-serif;
+      font-size: 2rem;
+      font-weight: 800;
+      color: var(--accent);
+      margin-bottom: 8px;
+    }
+
+    .tagline {
+      font-size: 2.4rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      line-height: 1.2;
+      margin: 20px 0 12px;
+      background: linear-gradient(135deg, #fff 40%, var(--accent));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .sub {
+      color: var(--muted);
+      font-size: 1rem;
+      max-width: 340px;
+      margin: 0 auto 36px;
+      line-height: 1.6;
+    }
+
+    .btn {
+      display: inline-block;
+      padding: 14px 32px;
+      border-radius: 50px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 1rem;
+      cursor: pointer;
+      border: none;
+      transition: all 0.2s;
+    }
+
+    .btn-primary {
+      background: var(--accent);
+      color: #fff;
+      box-shadow: 0 0 30px rgba(108, 99, 255, 0.4);
+    }
+
+    .btn-outline {
+      background: transparent;
+      color: var(--text);
+      border: 1px solid var(--border);
+      margin-left: 12px;
+    }
+
+    .features {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 16px;
+      margin-top: 48px;
+      max-width: 520px;
+      width: 100%;
+    }
+
+    .feat {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 14px;
+    }
+
+    .feat-icon {
+      font-size: 1.8rem;
+      margin-bottom: 8px;
+    }
+
+    .feat-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+    }
+
+    .feat-desc {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-top: 5px;
+    }
+
+    #auth {
+      align-items: center;
+      justify-content: center;
+      padding: 40px 20px;
+      background: radial-gradient(ellipse at 80% 80%, #1a1040 0%, #0a0a0f 60%);
+    }
+
+    .auth-box {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 32px 26px;
+      width: 100%;
+      max-width: 400px;
+    }
+
+    .auth-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      color: var(--accent);
+      text-align: center;
+      margin-bottom: 24px;
+    }
+
+    .auth-tabs {
+      display: flex;
+      margin-bottom: 24px;
+      background: var(--surface);
+      border-radius: 12px;
+      padding: 4px;
+    }
+
+    .auth-tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      border-radius: 10px;
+      cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      font-size: 0.9rem;
+      color: var(--muted);
+      border: none;
+      background: transparent;
+    }
+
+    .auth-tab.active {
+      background: var(--accent);
+      color: #fff;
+    }
+
+    .form-group {
+      margin-bottom: 16px;
+    }
+
+    .form-group label {
+      display: block;
+      font-size: 0.85rem;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+
+    .form-group input,
+    textarea {
+      width: 100%;
+      padding: 12px 16px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text);
+      font-size: 0.95rem;
+      outline: none;
+      font-family: 'DM Sans', sans-serif;
+    }
+
+    textarea {
+      min-height: 105px;
+      resize: vertical;
+    }
+
+    .btn-full {
+      width: 100%;
+      padding: 14px;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+      background: var(--accent);
+      color: #fff;
+      margin-top: 8px;
+    }
+
+    .auth-switch {
+      text-align: center;
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: var(--muted);
+    }
+
+    .auth-switch a {
+      color: var(--accent);
+      cursor: pointer;
+    }
+
+    .error-msg {
+      background: rgba(255, 101, 132, 0.15);
+      border: 1px solid var(--accent2);
+      color: var(--accent2);
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.85rem;
+      margin-bottom: 16px;
+      display: none;
+    }
+
+    #dashboard {
+      background: var(--bg);
+    }
+
+    .dash-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 16px 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .dash-logo {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      color: var(--accent);
+      font-size: 1.2rem;
+    }
+
+    .user-info {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .user-avatar {
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: var(--accent);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+    }
+
+    .btn-logout,
+    .btn-back,
+    .btn-cancel {
+      background: transparent;
+      border: 1px solid var(--border);
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-size: 0.85rem;
+    }
+
+    .dash-content {
+      padding: 24px 20px;
+      flex: 1;
+      overflow-y: auto;
+      max-width: 900px;
+      width: 100%;
+      margin: 0 auto;
+    }
+
+    .dash-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.5rem;
+      margin-bottom: 4px;
+    }
+
+    .dash-sub {
+      color: var(--muted);
+      font-size: 0.9rem;
+      margin-bottom: 24px;
+    }
+
+    .setup-card,
+    .business-card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .setup-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .setup-desc {
+      color: var(--muted);
+      font-size: 0.86rem;
+      margin-bottom: 16px;
+      line-height: 1.5;
+    }
+
+    .badge {
+      padding: 3px 10px;
+      border-radius: 20px;
+      font-size: 0.72rem;
+      font-weight: 700;
+    }
+
+    .badge-green {
+      background: rgba(0, 229, 160, 0.15);
+      color: var(--green);
+    }
+
+    .badge-yellow {
+      background: rgba(255, 200, 0, 0.15);
+      color: #ffc800;
+    }
+
+    .input-row {
+      display: flex;
+      gap: 10px;
+    }
+
+    .input-row input {
+      flex: 1;
+    }
+
+    .btn-save,
+    .btn-add {
+      padding: 12px 18px;
+      background: var(--accent);
+      color: #fff;
+      border: none;
+      border-radius: 12px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      white-space: nowrap;
+    }
+
+    .section-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin: 24px 0 16px;
+    }
+
+    .section-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.1rem;
+    }
+
+    .biz-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+      margin-bottom: 4px;
+    }
+
+    .biz-desc {
+      color: var(--muted);
+      font-size: 0.84rem;
+      margin-bottom: 14px;
+      line-height: 1.5;
+    }
+
+    .biz-actions {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+    }
+
+    .btn-sm {
+      padding: 8px 14px;
+      border-radius: 8px;
+      font-size: 0.82rem;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      border: none;
+    }
+
+    .btn-chat {
+      background: rgba(108, 99, 255, 0.15);
+      color: var(--accent);
+    }
+
+    .btn-embed {
+      background: rgba(0, 229, 160, 0.15);
+      color: var(--green);
+    }
+
+    .btn-delete {
+      background: rgba(255, 101, 132, 0.15);
+      color: var(--accent2);
+    }
+
+    .empty-state,
+    .loading {
+      text-align: center;
+      padding: 38px 20px;
+      color: var(--muted);
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      z-index: 100;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      backdrop-filter: blur(4px);
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 24px;
+      padding: 28px;
+      width: 100%;
+      max-width: 520px;
+      max-height: 90vh;
+      overflow-y: auto;
+    }
+
+    .modal-title {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1.2rem;
+      margin-bottom: 20px;
+    }
+
+    .modal-footer {
+      display: flex;
+      gap: 10px;
+      margin-top: 20px;
+      justify-content: flex-end;
+    }
+
+    #chat {
+      background: var(--bg);
+    }
+
+    .chat-header {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 20px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+    }
+
+    .chat-biz-name {
+      font-family: 'Syne', sans-serif;
+      font-weight: 800;
+      font-size: 1rem;
+    }
+
+    .chat-biz-status {
+      font-size: 0.75rem;
+      color: var(--green);
+    }
+
+    .chat-messages {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .msg {
+      max-width: 82%;
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .msg.user {
+      align-self: flex-end;
+      align-items: flex-end;
+    }
+
+    .msg.bot {
+      align-self: flex-start;
+      align-items: flex-start;
+    }
+
+    .msg-bubble {
+      padding: 12px 16px;
+      border-radius: 18px;
+      font-size: 0.9rem;
+      line-height: 1.5;
+      white-space: pre-wrap;
+    }
+
+    .msg.user .msg-bubble {
+      background: var(--accent);
+      color: #fff;
+      border-bottom-right-radius: 4px;
+    }
+
+    .msg.bot .msg-bubble {
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      border-bottom-left-radius: 4px;
+    }
+
+    .msg-time {
+      font-size: 0.7rem;
+      color: var(--muted);
+    }
+
+    .chat-input-area {
+      padding: 16px 20px;
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      display: flex;
+      gap: 10px;
+      align-items: flex-end;
+    }
+
+    .chat-input {
+      flex: 1;
+      padding: 12px 16px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      color: var(--text);
+      resize: none;
+      max-height: 120px;
+    }
+
+    .btn-send {
+      width: 44px;
+      height: 44px;
+      border-radius: 12px;
+      background: var(--accent);
+      border: none;
+      color: #fff;
+      cursor: pointer;
+      font-size: 1.2rem;
+      flex-shrink: 0;
+    }
+
+    .embed-code {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 14px;
+      font-family: monospace;
+      font-size: 0.78rem;
+      color: var(--green);
+      line-height: 1.6;
+      word-break: break-all;
+      margin-top: 10px;
+      white-space: pre-wrap;
+    }
+
+    .btn-copy {
+      width: 100%;
+      padding: 12px;
+      background: rgba(0, 229, 160, 0.15);
+      color: var(--green);
+      border: 1px solid rgba(0, 229, 160, 0.3);
+      border-radius: 10px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 700;
+      cursor: pointer;
+      margin-top: 12px;
+    }
+
+    .toast {
+      position: fixed;
+      bottom: 24px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--card);
+      border: 1px solid var(--border);
+      color: var(--text);
+      padding: 12px 24px;
+      border-radius: 50px;
+      font-size: 0.85rem;
+      z-index: 999;
+      opacity: 0;
+      transition: opacity 0.3s;
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .toast.show {
+      opacity: 1;
+    }
+
+    @media (max-width: 520px) {
+      .tagline {
+        font-size: 2rem;
+      }
+
+      .features {
+        grid-template-columns: 1fr;
+      }
+
+      .btn-outline {
+        margin-left: 0;
+        margin-top: 12px;
+      }
+
+      .input-row {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <div id="landing" class="page active">
+    <div>
+      <div class="logo">Bot<span style="color:var(--accent2)">Bazar</span></div>
+      <div class="tagline">আপনার ব্যবসায়<br>AI Chatbot লাগান</div>
+      <p class="sub">যেকোনো ওয়েবসাইটে AI Chatbot যোগ করুন। অর্ডার নিন, কাস্টমার সামলান — অটোমেটিক।</p>
+
+      <div>
+        <button class="btn btn-primary" onclick="showPage('auth')">শুরু করুন — ফ্রি</button>
+        <button class="btn btn-outline" onclick="showPage('auth')">লগইন</button>
+      </div>
+
+      <div class="features">
+        <div class="feat">
+          <div class="feat-icon">🤖</div>
+          <div class="feat-title">AI Powered</div>
+          <div class="feat-desc">Gemini AI দিয়ে চলে</div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-icon">⚡</div>
+          <div class="feat-title">Easy Setup</div>
+          <div class="feat-desc">Embed code কপি করুন</div>
+        </div>
+
+        <div class="feat">
+          <div class="feat-icon">💬</div>
+          <div class="feat-title">Messenger</div>
+          <div class="feat-desc">Facebook Page connect</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="auth" class="page">
+    <div style="width:100%;max-width:400px;margin-bottom:16px;">
+      <button class="btn-logout" onclick="showPage('landing')">← ফিরে যান</button>
+    </div>
+
+    <div class="auth-box">
+      <div class="auth-logo">Bot<span style="color:var(--accent2)">Bazar</span></div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-login" onclick="switchTab('login')">লগইন</button>
+        <button class="auth-tab" id="tab-signup" onclick="switchTab('signup')">সাইনআপ</button>
+      </div>
+
+      <div id="auth-error" class="error-msg"></div>
+
+      <div class="form-group">
+        <label>ইমেইল</label>
+        <input type="email" id="auth-email" placeholder="আপনার ইমেইল">
+      </div>
+
+      <div class="form-group">
+        <label>পাসওয়ার্ড</label>
+        <input type="password" id="auth-password" placeholder="পাসওয়ার্ড">
+      </div>
+
+      <button class="btn-full" id="auth-btn" onclick="handleAuth()">লগইন করুন</button>
+
+      <div class="auth-switch" id="auth-switch">
+        অ্যাকাউন্ট নেই? <a onclick="switchTab('signup')">সাইনআপ করুন</a>
+      </div>
+    </div>
+  </div>
+
+  <div id="dashboard" class="page">
+    <div class="dash-header">
+      <div class="dash-logo">BotBazar</div>
+
+      <div class="user-info">
+        <div class="user-avatar" id="user-avatar">?</div>
+        <button class="btn-logout" onclick="doLogout()">লগআউট</button>
+      </div>
+    </div>
+
+    <div class="dash-content">
+      <div class="dash-title">আপনার ড্যাশবোর্ড</div>
+      <div class="dash-sub">Chatbot, Messenger setting এবং embed code এখান থেকে পরিচালনা করুন</div>
+
+      <div class="setup-card">
+        <div class="setup-title">
+          🔑 Gemini API Key
+          <span class="badge badge-yellow" id="key-badge">সেট করুন</span>
+        </div>
+
+        <div class="setup-desc">
+          Chatbot test করার জন্য Gemini API Key সেভ করুন।
+        </div>
+
+        <div class="input-row">
+          <input type="password" id="gemini-key-input" placeholder="আপনার Gemini API Key">
+          <button class="btn-save" onclick="saveGeminiKey()">সেভ</button>
+        </div>
+      </div>
+
+      <div class="setup-card">
+        <div class="setup-title">
+          💬 Facebook Messenger Connect
+          <span class="badge badge-yellow" id="messenger-badge">সেট করুন</span>
+        </div>
+
+        <div class="setup-desc">
+          Messenger auto reply চালানোর জন্য Vercel Environment Variables-এ Page Access Token, Gemini API Key এবং Verify Token বসাতে হবে।
+        </div>
+
+        <div class="form-group">
+          <label>Webhook URL</label>
+          <div class="embed-code" id="webhook-url-box">https://your-project.vercel.app/api/webhook</div>
+        </div>
+
+        <div class="form-group">
+          <label>Verify Token</label>
+          <input type="text" id="verify-token-input" value="botbazar_verify_123">
+        </div>
+
+        <button class="btn-save" onclick="saveMessengerInfo()">Messenger Info Save</button>
+      </div>
+
+      <div class="section-header">
+        <div class="section-title">আপনার Chatbot গুলো</div>
+        <button class="btn-add" onclick="openAddModal()">+ নতুন</button>
+      </div>
+
+      <div id="business-list">
+        <div class="loading">লোড হচ্ছে...</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="chat" class="page">
+    <div class="chat-header">
+      <button class="btn-back" onclick="showPage('dashboard')">← Back</button>
+
+      <div>
+        <div class="chat-biz-name" id="chat-biz-name">Business</div>
+        <div class="chat-biz-status">● Online</div>
+      </div>
+    </div>
+
+    <div class="chat-messages" id="chat-messages"></div>
+
+    <div class="chat-input-area">
+      <textarea class="chat-input" id="chat-input" placeholder="মেসেজ লিখুন..." rows="1" onkeydown="handleChatKey(event)"></textarea>
+      <button class="btn-send" onclick="sendMessage()">➤</button>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="add-modal">
+    <div class="modal">
+      <div class="modal-title">নতুন Chatbot তৈরি করুন</div>
+
+      <div class="form-group">
+        <label>ব্যবসার নাম *</label>
+        <input type="text" id="biz-name" placeholder="যেমন: Rahman Fashion House">
+      </div>
+
+      <div class="form-group">
+        <label>ব্যবসার বিবরণ *</label>
+        <textarea id="biz-desc" placeholder="পণ্যের নাম, দাম, অফার, ডেলিভারি তথ্য লিখুন..."></textarea>
+      </div>
+
+      <div class="form-group">
+        <label>Bot এর নাম</label>
+        <input type="text" id="bot-name" placeholder="যেমন: AI Assistant">
+      </div>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal('add-modal')">বাতিল</button>
+        <button class="btn-save" onclick="saveBusiness()">তৈরি করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="embed-modal">
+    <div class="modal">
+      <div class="modal-title">🔗 Website Embed Code</div>
+
+      <p style="color:var(--muted);font-size:0.85rem;margin-bottom:12px;">
+        এই কোডটি আপনার InfinityFree e-commerce website-এর &lt;/body&gt; এর আগে বসান।
+      </p>
+
+      <div class="embed-code" id="embed-code-content"></div>
+
+      <button class="btn-copy" onclick="copyEmbed()">📋 কোড কপি করুন</button>
+
+      <div class="modal-footer">
+        <button class="btn-cancel" onclick="closeModal('embed-modal')">বন্ধ করুন</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/9.23.0/firebase-firestore-compat.js"></script>
+
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAehJNg6OcSNcd92mYrxtT50EnXfEi3LmI",
+      authDomain: "chatbot-saas-743b1.firebaseapp.com",
+      projectId: "chatbot-saas-743b1",
+      storageBucket: "chatbot-saas-743b1.firebasestorage.app",
+      messagingSenderId: "15177553048",
+      appId: "1:15177553048:web:c991d1653ea1f52dd1aced"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+
+    let currentUser = null;
+    let businesses = [];
+    let currentBiz = null;
+    let geminiKey = "";
+    let authMode = "login";
+    let currentEmbedCode = "";
+
+    function showPage(id) {
+      document.querySelectorAll(".page").forEach(page => {
+        page.classList.remove("active");
+      });
+
+      const page = document.getElementById(id);
+
+      if (page) {
+        page.classList.add("active");
+      } else {
+        console.error("Page not found:", id);
+      }
+    }
+
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.classList.add("show");
+
+      setTimeout(() => {
+        toast.classList.remove("show");
+      }, 2500);
+    }
+
+    function showAuthError(message) {
+      const box = document.getElementById("auth-error");
+      box.textContent = message;
+      box.style.display = "block";
+    }
+
+    function hideAuthError() {
+      const box = document.getElementById("auth-error");
+      box.textContent = "";
+      box.style.display = "none";
+    }
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        currentUser = user;
+        document.getElementById("user-avatar").textContent = user.email[0].toUpperCase();
+
+        loadGeminiKey();
+        loadMessengerInfo();
+        loadBusinesses();
+
+        showPage("dashboard");
+      } else {
+        currentUser = null;
+        showPage("landing");
+      }
+    });
+
+    function switchTab(tab) {
+      authMode = tab;
+
+      const isLogin = tab === "login";
+
+      document.getElementById("tab-login").classList.toggle("active", isLogin);
+      document.getElementById("tab-signup").classList.toggle("active", !isLogin);
+
+      document.getElementById("auth-btn").textContent = isLogin
+        ? "লগইন করুন"
+        : "অ্যাকাউন্ট তৈরি করুন";
+
+      document.getElementById("auth-switch").innerHTML = isLogin
+        ? 'অ্যাকাউন্ট নেই? <a onclick="switchTab(\'signup\')">সাইনআপ করুন</a>'
+        : 'আগেই অ্যাকাউন্ট আছে? <a onclick="switchTab(\'login\')">লগইন করুন</a>';
+
+      hideAuthError();
+    }
+
+    async function handleAuth() {
+      hideAuthError();
+
+      const email = document.getElementById("auth-email").value.trim();
+      const password = document.getElementById("auth-password").value.trim();
+
+      if (!email || !password) {
+        showAuthError("ইমেইল এবং পাসওয়ার্ড দিন");
+        return;
+      }
+
+      try {
+        if (authMode === "login") {
+          await auth.signInWithEmailAndPassword(email, password);
+          showToast("লগইন সফল হয়েছে");
+        } else {
+          await auth.createUserWithEmailAndPassword(email, password);
+          showToast("অ্যাকাউন্ট তৈরি হয়েছে");
+        }
+      } catch (error) {
+        showAuthError(error.message);
+      }
+    }
+
+    async function doLogout() {
+      await auth.signOut();
+      showToast("লগআউট হয়েছে");
+      showPage("landing");
+    }
+
+    async function saveGeminiKey() {
+      if (!currentUser) return;
+
+      const key = document.getElementById("gemini-key-input").value.trim();
+
+      if (!key) {
+        showToast("Gemini API Key দিন");
+        return;
+      }
+
+      try {
+        await db.collection("users").doc(currentUser.uid).set({
+          geminiKey: key,
+          updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        }, { merge: true });
+
+        geminiKey = key;
+
+        document.getElementById("key-badge").textContent = "সেভ করা";
+        document.getElementById("key-badge").className = "badge badge-green";
+
+        showToast("Gemini API Key সেভ হয়েছে");
+      } catch (error) {
+        console.error(error);
+        showToast("API Key সেভ করা যায়নি");
+      }
+    }
+
+    async function loadGeminiKey() {
+      if (!currentUser) return;
+
+      try {
+        const doc = await db.collection("users").doc(currentUser.uid).get();
+
+        if (doc.exists && doc.data().geminiKey) {
+          geminiKey = doc.data().geminiKey;
+
+          document.getElementById("gemini-key-input").value = geminiKey;
+          document.getElementById("key-badge").textContent = "সেভ করা";
+          document.getElementById("key-badge").className = "badge badge-green";
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    async function saveMessengerInfo() {
+      if (!currentUser) return;
+
+      const verifyToken = document.getElementById("verify-token-input").value.trim();
+      const webhookUrl = window.location.origin + "/api/webhook";
+
+      try {
+        await db.collection("users").doc(currentUser.uid).set({
+          messenger: {
+            verifyToken,
+            webhookUrl,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+          }
+        }, { merge: true });
+
+        document.getElementById("messenger-badge").textContent = "সেভ করা";
+        document.getElementById("messenger-badge").className = "badge badge-green";
+
+        showToast("Messenger info সেভ হয়েছে");
+      } catch (error) {
+        console.error(error);
+        showToast("Messenger info সেভ করা যায়নি");
+      }
+    }
+
+    async function loadMessengerInfo() {
+      if (!currentUser) return;
+
+      document.getElementById("webhook-url-box").textContent = window.location.origin + "/api/webhook";
+
+      try {
+        const doc = await db.collection("users").doc(currentUser.uid).get();
+
+        if (doc.exists && doc.data().messenger) {
+          const messenger = doc.data().messenger;
+
+          document.getElementById("verify-token-input").value =
+            messenger.verifyToken || "botbazar_verify_123";
+
+          document.getElementById("messenger-badge").textContent = "সেভ করা";
+          document.getElementById("messenger-badge").className = "badge badge-green";
+        }
+      } catch (error) {
+        console.error(error);
+      }
+    }
+
+    function openAddModal() {
+      document.getElementById("add-modal").classList.add("open");
+    }
+
+    function closeModal(id) {
+      document.getElementById(id).classList.remove("open");
+    }
+
+    async function saveBusiness() {
+      if (!currentUser) return;
+
+      const name = document.getElementById("biz-name").value.trim();
+      const desc = document.getElementById("biz-desc").value.trim();
+      const botName = document.getElementById("bot-name").value.trim() || "AI Assistant";
+
+      if (!name || !desc) {
+        showToast("ব্যবসার নাম এবং বিবরণ দিন");
+        return;
+      }
+
+      try {
+        await db.collection("users")
+          .doc(currentUser.uid)
+          .collection("businesses")
+          .add({
+            name,
+            desc,
+            botName,
+            createdAt: firebase.firestore.FieldValue.serverTimestamp()
+          });
+
+        document.getElementById("biz-name").value = "";
+        document.getElementById("biz-desc").value = "";
+        document.getElementById("bot-name").value = "";
+
+        closeModal("add-modal");
+        showToast("নতুন Chatbot তৈরি হয়েছে");
+
+        loadBusinesses();
+      } catch (error) {
+        console.error(error);
+        showToast("Chatbot তৈরি করা যায়নি");
+      }
+    }
+
+    async function loadBusinesses() {
+      if (!currentUser) return;
+
+      const list = document.getElementById("business-list");
+      list.innerHTML = '<div class="loading">লোড হচ্ছে...</div>';
+
+      try {
+        const snapshot = await db.collection("users")
+          .doc(currentUser.uid)
+          .collection("businesses")
+          .orderBy("createdAt", "desc")
+          .get();
+
+        businesses = [];
+
+        snapshot.forEach(doc => {
+          businesses.push({
+            id: doc.id,
+            ...doc.data()
+          });
+        });
+
+        renderBusinesses();
+      } catch (error) {
+        console.error(error);
+        list.innerHTML = '<div class="empty-state">ডাটা লোড করা যায়নি</div>';
+      }
+    }
+
+    function renderBusinesses() {
+      const list = document.getElementById("business-list");
+
+      if (businesses.length === 0) {
+        list.innerHTML = `
+          <div class="empty-state">
+            <div style="font-size:3rem;margin-bottom:12px;">🤖</div>
+            <p>এখনো কোনো Chatbot তৈরি করা হয়নি</p>
+          </div>
+        `;
+        return;
+      }
+
+      list.innerHTML = businesses.map(biz => `
+        <div class="business-card">
+          <div class="biz-name">${escapeHtml(biz.name)}</div>
+          <div class="biz-desc">${escapeHtml((biz.desc || "").substring(0, 150))}${(biz.desc || "").length > 150 ? "..." : ""}</div>
+
+          <div class="biz-actions">
+            <button class="btn-sm btn-chat" onclick="openChat('${biz.id}')">💬 Test Chat</button>
+            <button class="btn-sm btn-embed" onclick="openEmbed('${biz.id}')">🔗 Embed Code</button>
+            <button class="btn-sm btn-delete" onclick="deleteBusiness('${biz.id}')">Delete</button>
+          </div>
+        </div>
+      `).join("");
+    }
+
+    async function deleteBusiness(id) {
+      if (!confirm("আপনি কি এই Chatbot ডিলিট করতে চান?")) return;
+
+      try {
+        await db.collection("users")
+          .doc(currentUser.uid)
+          .collection("businesses")
+          .doc(id)
+          .delete();
+
+        showToast("Chatbot ডিলিট হয়েছে");
+        loadBusinesses();
+      } catch (error) {
+        console.error(error);
+        showToast("ডিলিট করা যায়নি");
+      }
+    }
+
+    function openChat(id) {
+      currentBiz = businesses.find(biz => biz.id === id);
+
+      if (!currentBiz) {
+        showToast("Chatbot পাওয়া যায়নি");
+        return;
+      }
+
+      document.getElementById("chat-biz-name").textContent = currentBiz.name;
+      document.getElementById("chat-messages").innerHTML = "";
+
+      addMessage("bot", `হ্যালো! আমি ${currentBiz.botName || "AI Assistant"}। ${currentBiz.name} সম্পর্কে কী জানতে চান?`);
+
+      showPage("chat");
+    }
+
+    function addMessage(sender, text) {
+      const messages = document.getElementById("chat-messages");
+
+      const div = document.createElement("div");
+      div.className = `msg ${sender}`;
+
+      div.innerHTML = `
+        <div class="msg-bubble">${escapeHtml(text)}</div>
+        <div class="msg-time">${new Date().toLocaleTimeString("bn-BD", {
+          hour: "2-digit",
+          minute: "2-digit"
+        })}</div>
+      `;
+
+      messages.appendChild(div);
+      messages.scrollTop = messages.scrollHeight;
+    }
+
+    function handleChatKey(event) {
+      if (event.key === "Enter" && !event.shiftKey) {
+        event.preventDefault();
+        sendMessage();
+      }
+    }
+
+    async function sendMessage() {
+      const input = document.getElementById("chat-input");
+      const message = input.value.trim();
+
+      if (!message) return;
+
+      if (!geminiKey) {
+        showToast("আগে Gemini API Key সেভ করুন");
+        return;
+      }
+
+      if (!currentBiz) {
+        showToast("আগে Chatbot select করুন");
+        return;
+      }
+
+      addMessage("user", message);
+      input.value = "";
+
+      addMessage("bot", "Typing...");
+
+      try {
+        const reply = await askGemini(message);
+
+        const messages = document.getElementById("chat-messages");
+        const lastBot = messages.querySelector(".msg.bot:last-child");
+        if (lastBot) lastBot.remove();
+
+        addMessage("bot", reply);
+      } catch (error) {
+        console.error(error);
+
+        const messages = document.getElementById("chat-messages");
+        const lastBot = messages.querySelector(".msg.bot:last-child");
+        if (lastBot) lastBot.remove();
+
+        addMessage("bot", "দুঃখিত, এখন উত্তর দিতে সমস্যা হচ্ছে। একটু পরে চেষ্টা করুন।");
+      }
+    }
+
+    async function askGemini(userMessage) {
+      const prompt = `
+তুমি একটি বাংলা AI customer support chatbot.
+
+Business Name:
+${currentBiz.name}
+
+Business Information:
+${currentBiz.desc}
+
+Rules:
+- বাংলায় উত্তর দেবে
+- সংক্ষিপ্ত ও ভদ্রভাবে উত্তর দেবে
+- পণ্য, দাম, অর্ডার, ডেলিভারি নিয়ে সাহায্য করবে
+- কাস্টমার অর্ডার করতে চাইলে নাম, ফোন, ঠিকানা, পণ্যের নাম এবং পরিমাণ চাইবে
+
+Customer Message:
+${userMessage}
+`;
+
+      const response = await fetch(
+        `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${geminiKey}`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            contents: [
+              {
+                parts: [
+                  { text: prompt }
+                ]
+              }
+            ]
+          })
+        }
+      );
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error(data);
+        throw new Error("Gemini API Error");
+      }
+
+      return data.candidates?.[0]?.content?.parts?.[0]?.text || "আমি বুঝতে পারিনি। আবার বলবেন?";
+    }
+
+    function openEmbed(id) {
+      const biz = businesses.find(b => b.id === id);
+
+      if (!biz) {
+        showToast("Business পাওয়া যায়নি");
+        return;
+      }
+
+      const hostUrl = window.location.origin + window.location.pathname;
+
+      currentEmbedCode = `<iframe 
+  src="${hostUrl}?bot=${id}" 
+  style="position:fixed;bottom:20px;right:20px;width:360px;height:520px;border:0;border-radius:16px;z-index:999999;box-shadow:0 10px 40px rgba(0,0,0,0.35);">
+</iframe>`;
+
+      document.getElementById("embed-code-content").textContent = currentEmbedCode;
+      document.getElementById("embed-modal").classList.add("open");
+    }
+
+    async function copyEmbed() {
+      try {
+        await navigator.clipboard.writeText(currentEmbedCode);
+        showToast("Embed code কপি হয়েছে");
+      } catch (error) {
+        showToast("কপি করা যায়নি");
+      }
+    }
+
+    function escapeHtml(text) {
+      return String(text)
+        .replaceAll("&", "&amp;")
+        .replaceAll("<", "&lt;")
+        .replaceAll(">", "&gt;")
+        .replaceAll('"', "&quot;")
+        .replaceAll("'", "&#039;");
+    }
+
+    window.addEventListener("load", () => {
+      const params = new URLSearchParams(window.location.search);
+      const botId = params.get("bot");
+
+      if (botId) {
+        console.log("Embed bot mode:", botId);
+      }
+    });
+  </script>
+
+</body>
+</html>
